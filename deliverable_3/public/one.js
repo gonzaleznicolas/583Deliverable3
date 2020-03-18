@@ -32,6 +32,8 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
   console.log(cost_of_living);
   console.log(city_coordinates);
 
+  augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
+
   let countries = topojson.feature(data, data.objects.countries).features 
   console.log(countries);
 
@@ -41,5 +43,17 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .append("path")
       .attr("class", "country")
       .attr("d", pathGenerator);
+}
+
+function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){
+  cost_of_living.forEach(function(cityCostData){
+    cityCords = city_coordinates.find(function(cityCoordinatesData){ return cityCostData.City == cityCoordinatesData.city_ascii && cityCostData.Country == cityCoordinatesData.country;});
+    if (cityCords != undefined){  // if found lat and long
+      cityCostData.lat = cityCords.lat; cityCostData.lng = cityCords.lng;
+    }
+    else {
+      console.log(cityCostData.City, cityCostData.Country);
+    }
+  });
 }
 
