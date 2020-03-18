@@ -9,11 +9,13 @@ svg{
 }
 
 .mouseover > .city-circle{
-	fill: white;
+	fill: lightskyblue;
+	r: 5;
 }
 
 .selected > .city-circle{
 	fill: yellow;
+	r: 3;
 }
 
 p{
