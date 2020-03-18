@@ -14,6 +14,8 @@ var svg = d3.select( "body" )
 // read in necessary data
 d3.queue()
   .defer(d3.json, "world.topojson")
+  .defer(d3.csv, "cost_of_living.csv")
+  .defer(d3.csv, "city_coordinates.csv")
   .await(onDataLoaded);
 
 // create projection using Mercator 
@@ -25,8 +27,10 @@ let projection = d3.geoMercator()
 let pathGenerator = d3.geoPath()
   .projection(projection);
 
-function onDataLoaded(error, data){
+function onDataLoaded(error, data, cost_of_living, city_coordinates){
   console.log(data);
+  console.log(cost_of_living);
+  console.log(city_coordinates);
 
   let countries = topojson.feature(data, data.objects.countries).features 
   console.log(countries);
