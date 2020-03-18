@@ -10,9 +10,11 @@ svg{
 
 .city-label{
 	font-family: Arial;
-	font-size: 5px;
+	font-size: 10px;
 	visibility: hidden;
+	fill: blue;
 }
+
 
 .mouseover > .city-label{
 	visibility: visible;

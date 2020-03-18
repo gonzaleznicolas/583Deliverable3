@@ -72,7 +72,7 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
   
   cityMarkers.append("text")
   .attr("class", "city-label")
-  .text("Capital")
+  .text(d => d.City)
   .attr("x", function(d){
     let coords = projection([d.lng, d.lat]);
     return coords[0]+2;
