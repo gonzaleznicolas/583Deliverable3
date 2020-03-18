@@ -83,7 +83,7 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
   cityMarkers.append("circle")
       .attr("class", "city-circle")
       .attr("fill", d => indexToColor(d["Cost of Living Index"]))
-      .attr("r", 1.5)
+      .attr("r", 1)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);
         return coords[0];
