@@ -8,14 +8,15 @@ svg{
 	stroke: rgb(241, 241, 241);
 }
 
-.city-label{
-	font-family: Arial;
-	font-size: 10px;
-	visibility: hidden;
-	fill: blue;
+.mouseover > .city-circle{
+	fill: white;
 }
 
+.selected > .city-circle{
+	fill: yellow;
+}
 
-.mouseover > .city-label{
-	visibility: visible;
+#hoveredCity{
+	font-family: Arial;
+	font-size: 20px;
 }

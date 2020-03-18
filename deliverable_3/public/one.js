@@ -4,8 +4,7 @@ let margin = {top: 50, left: 50, right: 50, bottom: 50};
 let height = 400 - margin.top - margin.bottom;
 let width = 800 - margin.left - margin.right;
 
-var svg = d3.select( "body" )
-  .append( "svg" )
+var svg = d3.select( "svg" )
   .attr( "width", width + margin.top + margin.bottom)
   .attr( "height", height + margin.left + margin.right)
   .append("g")
@@ -52,15 +51,26 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .data(cost_of_living)
       .enter()
       .append("g")
+      .on("click", function(d){
+        let thisCity = d3.select(this);
+        if (thisCity.classed("selected")){
+          thisCity.classed("selected", false);
+        }
+        else{
+          thisCity.classed("selected", true);
+        }        
+      })
       .on("mouseover", function(d){
         d3.select(this).classed("mouseover", true);
+        $("#hoveredCity").text(d.City);
       })
       .on("mouseout", function(d){
         d3.select(this).classed("mouseover", false);
       });
 
   cityMarkers.append("circle")
-      .attr("r", 1)
+      .attr("class", "city-circle")
+      .attr("r", 1.5)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);
         return coords[0];
@@ -69,18 +79,6 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
         let coords = projection([d.lng, d.lat]);
         return coords[1];
       });
-  
-  cityMarkers.append("text")
-  .attr("class", "city-label")
-  .text(d => d.City)
-  .attr("x", function(d){
-    let coords = projection([d.lng, d.lat]);
-    return coords[0]+2;
-  })
-  .attr("y", function(d){
-    let coords = projection([d.lng, d.lat]);
-    return coords[1]+2;
-  });
 }
 
 function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){
