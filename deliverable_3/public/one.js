@@ -51,6 +51,7 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .data(cost_of_living)
       .enter()
       .append("g")
+      .attr("class", "city-markers")
       .on("click", function(d){
         let thisCity = d3.select(this);
         if (thisCity.classed("selected")){
@@ -93,5 +94,9 @@ function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates
       console.log(cityCostData.City, cityCostData.Country);
     }
   });
+}
+
+function getSelectedCities(){
+  return d3.selectAll(".city-markers.selected").data();
 }
 
