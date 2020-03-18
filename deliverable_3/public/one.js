@@ -47,6 +47,7 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .attr("class", "country")
       .attr("d", pathGenerator);
   
+  // draw city markers
   svg.selectAll(".city-markers")
       .data(cost_of_living)
       .enter()
