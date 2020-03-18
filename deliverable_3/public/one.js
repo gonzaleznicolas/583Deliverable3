@@ -29,13 +29,9 @@ let pathGenerator = d3.geoPath()
   .projection(projection);
 
 // create color scale
-let linScale = d3.scaleLinear()
-  .domain([0, 130])
-  .range([100, 0]);
-
-function indexToColor(index){
-  return `hsla(360, 54%, ${linScale(index)}%, 1)`
-}
+let colorScale = d3.scaleLinear()
+  .domain([0, 50, 130])
+  .range(['darkred', 'white', 'darkgreen']);
 
 function onDataLoaded(error, data, cost_of_living, city_coordinates){
   augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
@@ -69,12 +65,12 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
         }
         else{
           thisCity.classed("selected", true);
-          $("#selectedCities").append(`<p id="p${d.City}">${d.City}</p>`);
+          $("#selectedCities").append(`<p id="p${d.City}">${d.City}, Cost of Living Index: ${d["Cost of Living Index"]}</p>`);
         }        
       })
       .on("mouseover", function(d){
         d3.select(this).classed("mouseover", true);
-        $("#hoveredCity").text(d.City);
+        $("#hoveredCity").text(`${d.City}, Cost of Living Index: ${d["Cost of Living Index"]}`);
       })
       .on("mouseout", function(d){
         d3.select(this).classed("mouseover", false);
@@ -82,8 +78,8 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
 
   cityMarkers.append("circle")
       .attr("class", "city-circle")
-      .attr("fill", d => indexToColor(d["Cost of Living Index"]))
-      .attr("r", 1)
+      .attr("fill", d => colorScale(d["Cost of Living Index"]))
+      .attr("r", 1.5)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);
         return coords[0];
