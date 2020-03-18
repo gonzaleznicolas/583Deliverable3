@@ -1,20 +1,22 @@
 svg{
-	background: rgb(241, 241, 241);
+	background: hsla(202, 70%, 80%, 1);
 }
 
 .country{
-	fill: rgb(177, 177, 177);
+	fill: hsla(74, 69%, 87%, 1);
 	stroke-width: 0.1;
-	stroke: rgb(241, 241, 241);
+	stroke: hsla(57, 0%, 69%, 1);
 }
 
 .mouseover > .city-circle{
-	fill: lightskyblue;
+	fill: hsla(360, 41%, 68%, 1);
 	r: 5;
 }
 
 .selected > .city-circle{
-	fill: yellow;
+	fill: hsla(360, 41%, 68%, 1);
+	stroke: black;
+	stroke-width: 1;
 	r: 3;
 }
 
