@@ -30,8 +30,8 @@ let pathGenerator = d3.geoPath()
 
 // create color scale
 let linScale = d3.scaleLinear()
-  .domain([0, 150])
-  .range([100, 15]);
+  .domain([0, 130])
+  .range([100, 0]);
 
 function indexToColor(index){
   return `hsla(360, 54%, ${linScale(index)}%, 1)`
