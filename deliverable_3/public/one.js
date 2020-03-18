@@ -28,6 +28,15 @@ let projection = d3.geoMercator()
 let pathGenerator = d3.geoPath()
   .projection(projection);
 
+// create color scale
+let linScale = d3.scaleLinear()
+  .domain([0, 150])
+  .range([100, 15]);
+
+function indexToColor(index){
+  return `hsla(360, 54%, ${linScale(index)}%, 1)`
+}
+
 function onDataLoaded(error, data, cost_of_living, city_coordinates){
   augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
 
@@ -73,6 +82,7 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
 
   cityMarkers.append("circle")
       .attr("class", "city-circle")
+      .attr("fill", d => indexToColor(d["Cost of Living Index"]))
       .attr("r", 1.5)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);

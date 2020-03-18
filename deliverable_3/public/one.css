@@ -9,12 +9,10 @@ svg{
 }
 
 .mouseover > .city-circle{
-	fill: hsla(360, 41%, 68%, 1);
 	r: 5;
 }
 
 .selected > .city-circle{
-	fill: hsla(360, 41%, 68%, 1);
 	stroke: black;
 	stroke-width: 1;
 	r: 3;
