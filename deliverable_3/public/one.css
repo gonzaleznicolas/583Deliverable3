@@ -1,0 +1,9 @@
+svg{
+	background: rgb(241, 241, 241);
+}
+
+.country{
+	fill: rgb(177, 177, 177);
+	stroke-width: 0.1;
+	stroke: rgb(241, 241, 241);
+}
