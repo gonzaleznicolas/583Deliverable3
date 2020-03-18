@@ -51,7 +51,13 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
   let cityMarkers = svg.selectAll(".city-markers")
       .data(cost_of_living)
       .enter()
-      .append("g");
+      .append("g")
+      .on("mouseover", function(d){
+        d3.select(this).classed("mouseover", true);
+      })
+      .on("mouseout", function(d){
+        d3.select(this).classed("mouseover", false);
+      });
 
   cityMarkers.append("circle")
       .attr("r", 1)

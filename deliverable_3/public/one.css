@@ -11,4 +11,9 @@ svg{
 .city-label{
 	font-family: Arial;
 	font-size: 5px;
+	visibility: hidden;
+}
+
+.mouseover > .city-label{
+	visibility: visible;
 }
