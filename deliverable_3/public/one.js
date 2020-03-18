@@ -55,9 +55,11 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
         let thisCity = d3.select(this);
         if (thisCity.classed("selected")){
           thisCity.classed("selected", false);
+          $("#p"+d.City).remove();
         }
         else{
           thisCity.classed("selected", true);
+          $("#selectedCities").append(`<p id="p${d.City}">${d.City}</p>`);
         }        
       })
       .on("mouseover", function(d){
