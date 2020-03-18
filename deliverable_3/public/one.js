@@ -18,7 +18,9 @@ d3.queue()
   .defer(d3.csv, "city_coordinates.csv")
   .await(onDataLoaded);
 
-// create projection using Mercator 
+// create projection using Mercator.
+// Converts a lattitude and longitude into a screen coordinate
+// according to the specified projection type
 let projection = d3.geoMercator()
   .translate([width/2, height/2+50])
   .scale(110);
@@ -28,21 +30,36 @@ let pathGenerator = d3.geoPath()
   .projection(projection);
 
 function onDataLoaded(error, data, cost_of_living, city_coordinates){
+  augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
+
   console.log(data);
   console.log(cost_of_living);
   console.log(city_coordinates);
 
-  augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
-
   let countries = topojson.feature(data, data.objects.countries).features 
   console.log(countries);
 
+  // draw countries
   svg.selectAll(".country")
       .data(countries)
       .enter()
       .append("path")
       .attr("class", "country")
       .attr("d", pathGenerator);
+  
+  svg.selectAll(".city-markers")
+      .data(cost_of_living)
+      .enter()
+      .append("circle")
+      .attr("r", 1)
+      .attr("cx", function(d){
+        let coords = projection([d.lng, d.lat]);
+        return coords[0];
+      })
+      .attr("cy", function(d){
+        let coords = projection([d.lng, d.lat]);
+        return coords[1];
+      });
 }
 
 function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){
