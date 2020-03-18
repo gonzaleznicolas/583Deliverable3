@@ -48,10 +48,12 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .attr("d", pathGenerator);
   
   // draw city markers
-  svg.selectAll(".city-markers")
+  let cityMarkers = svg.selectAll(".city-markers")
       .data(cost_of_living)
       .enter()
-      .append("circle")
+      .append("g");
+
+  cityMarkers.append("circle")
       .attr("r", 1)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);
@@ -61,6 +63,18 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
         let coords = projection([d.lng, d.lat]);
         return coords[1];
       });
+  
+  cityMarkers.append("text")
+  .attr("class", "city-label")
+  .text("Capital")
+  .attr("x", function(d){
+    let coords = projection([d.lng, d.lat]);
+    return coords[0]+2;
+  })
+  .attr("y", function(d){
+    let coords = projection([d.lng, d.lat]);
+    return coords[1]+2;
+  });
 }
 
 function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){

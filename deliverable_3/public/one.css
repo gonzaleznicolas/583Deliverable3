@@ -7,3 +7,8 @@ svg{
 	stroke-width: 0.1;
 	stroke: rgb(241, 241, 241);
 }
+
+.city-label{
+	font-family: Arial;
+	font-size: 5px;
+}
