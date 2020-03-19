@@ -1,11 +1,12 @@
 // GLOBAL DECLARATIONS
 let svg;
+let mapGroup;
 let margin;
 let height;
 let width;
 let costOfLivingData;
 let projection;
-let pathGenerator;
+let path;
 let selectedIndex;
 let colorScale;
 
@@ -19,8 +20,7 @@ Promise.all([
 function initialize(data){
   
   prepareData(data[1], data[2]);
-  setupPage();
-  drawMap(data[0]);
+  setupPageAndMap(data[0]);
 
   selectedIndex = $('#indexSelector').val();
 
@@ -51,23 +51,10 @@ function prepareData(cost_of_living, city_coordinates){
   });
 }
 
-function setupPage(){
-  margin = {top: 50, left: 50, right: 50, bottom: 50};
-
-  height = 400 - margin.top - margin.bottom;
-  width = 800 - margin.left - margin.right;
+function setupPageAndMap(world_topoJSON_data){
+  height = 400;
+  width = 800;
   
-  svg = d3.select( "svg" )
-    .attr( "width", width + margin.top + margin.bottom)
-    .attr( "height", height + margin.left + margin.right)
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
-}
-
-function drawMap(world_topoJSON_data){
-
-  let countries = topojson.feature(world_topoJSON_data, world_topoJSON_data.objects.countries).features 
-
   // create projection using Mercator.
   // Converts a lattitude and longitude into a screen coordinate
   // according to the specified projection type
@@ -76,16 +63,40 @@ function drawMap(world_topoJSON_data){
     .scale((width - 1) / 2 / Math.PI);
 
   // create a path generator to translate from topoJSON geometry to SVG paths
-  pathGenerator = d3.geoPath()
-    .projection(projection);
+  path = d3.geoPath()
+  .projection(projection);
 
-  // draw countries
-  svg.selectAll(".country")
-      .data(countries)
-      .enter()
-      .append("path")
-      .attr("class", "country")
-      .attr("d", pathGenerator);
+  const zoom = d3.zoom()
+  .scaleExtent([1, 8])
+  .on('zoom', zoomed);
+
+  svg = d3.select( "svg" )
+    .attr( "width", width)
+    .attr( "height", height);
+  
+  mapGroup = svg.append("g");
+
+  svg.call(zoom);
+
+  mapGroup.append('path')
+    .datum({ type: 'Sphere' })
+    .attr('class', 'sphere')
+    .attr('d', path);
+
+  mapGroup.append('path')
+    .datum(topojson.merge(world_topoJSON_data, world_topoJSON_data.objects.countries.geometries))
+    .attr('class', 'land')
+    .attr('d', path);
+
+  mapGroup.append('path')
+    .datum(topojson.mesh(world_topoJSON_data, world_topoJSON_data.objects.countries, (a, b) => a !== b))
+    .attr('class', 'boundary')
+    .attr('d', path);
+}
+
+function zoomed() {
+  mapGroup.selectAll('path') // To prevent stroke width from scaling
+    .attr('transform', d3.event.transform);
 }
 
 function refreshPlottedCities(){
