@@ -93,25 +93,9 @@ function refreshPlottedCities(){
       .enter()
       .append("g")
       .attr("class", "city-markers")
-      .on("click", function(d){
-        let thisCity = d3.select(this);
-        if (thisCity.classed("selected")){
-          thisCity.classed("selected", false);
-          $("#p"+d.City).remove();
-        }
-        else{
-          thisCity.classed("selected", true);
-          addCityToElement(d, "#selectedCities");
-        }        
-      })
-      .on("mouseover", function(d){
-        d3.select(this).classed("mouseover", true);
-        addCityToElement(d, "#hoveredCity");
-      })
-      .on("mouseout", function(d){
-        d3.select(this).classed("mouseover", false);
-        $("#hoveredCity").empty();
-      });
+      .on("click", onClickCity)
+      .on("mouseover", onMouseOverCity)
+      .on("mouseout", onMouseOutOfCity);
 
   cityMarkers.append("circle")
       .attr("class", "city-circle")
@@ -128,6 +112,28 @@ function refreshPlottedCities(){
 }
 
 // HELPER FUNCTIONS
+
+function onMouseOverCity(d){
+  d3.select(this).classed("mouseover", true);
+  addCityToElement(d, "#hoveredCity");
+}
+
+function onMouseOutOfCity(d){
+  d3.select(this).classed("mouseover", false);
+  $("#hoveredCity").empty();
+}
+
+function onClickCity(d){
+  let thisCity = d3.select(this);
+  if (thisCity.classed("selected")){
+    thisCity.classed("selected", false);
+    $("#p"+d.City).remove();
+  }
+  else{
+    thisCity.classed("selected", true);
+    addCityToElement(d, "#selectedCities");
+  }        
+}
 
 function addCityToElement(d, element){
   $(element).append(`<p id="p${d.City}"><b>${d.City}</b> </br>
