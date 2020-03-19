@@ -132,7 +132,7 @@ function onClickCity(d){
   let thisCity = d3.select(this);
   if (thisCity.classed("selected")){
     thisCity.classed("selected", false);
-    $("#p"+d.City).remove();
+    $(`#selectedCities > .p${d.City.replace(/\W/g,'')}`).remove();
   }
   else{
     thisCity.classed("selected", true);
@@ -141,7 +141,7 @@ function onClickCity(d){
 }
 
 function addCityToElement(d, element){
-  $(element).append(`<p id="p${d.City}"><b>${d.City}</b> </br>
+  $(element).append(`<p class="p${d.City.replace(/\W/g,'')}"><b>${d.City}</b> </br>
                               Cost of Living Index: ${d["Cost of Living Index"]},</br>
                               Rent Index: ${d["Rent Index"]},</br>
                               Cost of Living Plus Rent Index: ${d["Cost of Living Plus Rent Index"]},</br>
