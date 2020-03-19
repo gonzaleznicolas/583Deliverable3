@@ -79,12 +79,6 @@ function drawMap(world_topoJSON_data){
   pathGenerator = d3.geoPath()
     .projection(projection);
 
-  let zoom = d3.zoom()
-  .scaleExtent([1, 8])
-  .on('zoom', zoomed);
-
-  svg.call(zoom);
-
   // draw countries
   svg.selectAll(".country")
       .data(countries)
@@ -92,11 +86,6 @@ function drawMap(world_topoJSON_data){
       .append("path")
       .attr("class", "country")
       .attr("d", pathGenerator);
-}
-
-function zoomed() {
-  g.selectAll('path') // To prevent stroke width from scaling
-    .attr('transform', d3.event.transform);
 }
 
 function refreshPlottedCities(){
