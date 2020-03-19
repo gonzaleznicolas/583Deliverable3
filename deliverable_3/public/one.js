@@ -10,16 +10,17 @@ let selectedIndex;
 let colorScale;
 
 // read in data
-d3.queue()
-  .defer(d3.json, "world.topojson")
-  .defer(d3.csv, "cost_of_living.csv")
-  .defer(d3.csv, "city_coordinates.csv")
-  .await(initialize);
+Promise.all([
+  d3.json("world.topojson") ,
+  d3.csv("cost_of_living.csv"),
+  d3.csv('city_coordinates.csv')
+]).then(initialize);
 
-function initialize(error, world_topoJSON_data, cost_of_living, city_coordinates){
-  prepareData(cost_of_living, city_coordinates);
+function initialize(data){
+  
+  prepareData(data[1], data[2]);
   setupPage();
-  drawMap(world_topoJSON_data);
+  drawMap(data[0]);
 
   selectedIndex = $('#indexSelector').val();
 
@@ -29,9 +30,9 @@ function initialize(error, world_topoJSON_data, cost_of_living, city_coordinates
   });
 
   colorScale = d3.scaleLinear()
-    .domain([0, 130])
-    .range(['white', 'darkred']);
-
+    .domain([0, 50, 130])
+    .range(['red','white', 'green']);
+  
   refreshPlottedCities();
 }
 
@@ -71,12 +72,18 @@ function drawMap(world_topoJSON_data){
   // Converts a lattitude and longitude into a screen coordinate
   // according to the specified projection type
   projection = d3.geoMercator()
-    .translate([width/2, height/2+50])
-    .scale(110);
+    .translate([width/2, height/2])
+    .scale((width - 1) / 2 / Math.PI);
 
   // create a path generator to translate from topoJSON geometry to SVG paths
   pathGenerator = d3.geoPath()
     .projection(projection);
+
+  let zoom = d3.zoom()
+  .scaleExtent([1, 8])
+  .on('zoom', zoomed);
+
+  svg.call(zoom);
 
   // draw countries
   svg.selectAll(".country")
@@ -85,6 +92,11 @@ function drawMap(world_topoJSON_data){
       .append("path")
       .attr("class", "country")
       .attr("d", pathGenerator);
+}
+
+function zoomed() {
+  g.selectAll('path') // To prevent stroke width from scaling
+    .attr('transform', d3.event.transform);
 }
 
 function refreshPlottedCities(){
