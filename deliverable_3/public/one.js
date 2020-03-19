@@ -101,15 +101,16 @@ function refreshPlottedCities(){
         }
         else{
           thisCity.classed("selected", true);
-          addCityToListOfSelected(d);
+          addCityToElement(d, "#selectedCities");
         }        
       })
       .on("mouseover", function(d){
         d3.select(this).classed("mouseover", true);
-        $("#hoveredCity").text(`${d.City}, Cost of Living Index: ${d["Cost of Living Index"]}`);
+        addCityToElement(d, "#hoveredCity");
       })
       .on("mouseout", function(d){
         d3.select(this).classed("mouseover", false);
+        $("#hoveredCity").empty();
       });
 
   cityMarkers.append("circle")
@@ -128,8 +129,8 @@ function refreshPlottedCities(){
 
 // HELPER FUNCTIONS
 
-function addCityToListOfSelected(d){
-  $("#selectedCities").append(`<p id="p${d.City}"><b>${d.City}</b> </br>
+function addCityToElement(d, element){
+  $(element).append(`<p id="p${d.City}"><b>${d.City}</b> </br>
                               Cost of Living Index: ${d["Cost of Living Index"]},</br>
                               Rent Index: ${d["Rent Index"]},</br>
                               Cost of Living Plus Rent Index: ${d["Cost of Living Plus Rent Index"]},</br>
