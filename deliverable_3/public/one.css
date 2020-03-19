@@ -1,3 +1,7 @@
+*{
+	font-family: Arial;
+}
+
 svg{
 	background: hsla(202, 70%, 80%, 1);
 	border: solid 1px black;
@@ -21,13 +25,4 @@ select{
 	stroke: black;
 	stroke-width: 1;
 	r: 3;
-}
-
-p{
-	font-family: Arial;
-	font-size: 20px;
-}
-
-.bold{
-	font-weight: 700;
 }
