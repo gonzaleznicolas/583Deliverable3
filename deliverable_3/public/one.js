@@ -1,4 +1,6 @@
 
+// PAGE SETUP
+
 let margin = {top: 50, left: 50, right: 50, bottom: 50};
 
 let height = 400 - margin.top - margin.bottom;
@@ -10,12 +12,7 @@ var svg = d3.select( "svg" )
   .append("g")
   .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// read in necessary data
-d3.queue()
-  .defer(d3.json, "world.topojson")
-  .defer(d3.csv, "cost_of_living.csv")
-  .defer(d3.csv, "city_coordinates.csv")
-  .await(onDataLoaded);
+// MAP SETUP
 
 // create projection using Mercator.
 // Converts a lattitude and longitude into a screen coordinate
@@ -30,8 +27,22 @@ let pathGenerator = d3.geoPath()
 
 // create color scale
 let colorScale = d3.scaleLinear()
-  .domain([0, 50, 130])
-  .range(['darkred', 'white', 'darkgreen']);
+  .domain([0, 130])
+  .range(['white', 'darkred']);
+
+// MAIN CODE
+
+$('#indexSelector').on('change', function(){
+  let selectedIndex = $(this).children("option:selected").val();
+  console.log(selectedIndex);
+});
+
+// read in necessary data
+d3.queue()
+  .defer(d3.json, "world.topojson")
+  .defer(d3.csv, "cost_of_living.csv")
+  .defer(d3.csv, "city_coordinates.csv")
+  .await(onDataLoaded);
 
 function onDataLoaded(error, data, cost_of_living, city_coordinates){
   augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
@@ -89,6 +100,8 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
         return coords[1];
       });
 }
+
+// HELPER FUNCTIONS
 
 function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){
   cost_of_living.forEach(function(cityCostData){

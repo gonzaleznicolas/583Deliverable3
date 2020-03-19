@@ -1,5 +1,10 @@
 svg{
 	background: hsla(202, 70%, 80%, 1);
+	border: solid 1px black;
+}
+
+select{
+	margin: 20px;
 }
 
 .country{
