@@ -89,27 +89,30 @@ function drawMap(world_topoJSON_data){
 
 function refreshPlottedCities(){
 
-  let cityMarkers = svg.selectAll(".city-markers")
-      .data(costOfLivingData)
-      .enter()
-      .append("g")
-      .attr("class", "city-markers")
-      .on("click", onClickCity)
-      .on("mouseover", onMouseOverCity)
-      .on("mouseout", onMouseOutOfCity);
+  let cityUpdateSelection = svg.selectAll(".city-circle").data(costOfLivingData);
 
-  cityMarkers.append("circle")
-      .attr("class", "city-circle")
-      .attr("fill", d => colorScale(d[selectedIndex]))
-      .attr("r", 1.5)
-      .attr("cx", function(d){
-        let coords = projection([d.lng, d.lat]);
-        return coords[0];
-      })
-      .attr("cy", function(d){
-        let coords = projection([d.lng, d.lat]);
-        return coords[1];
-      });
+  let cityEnterSelection = cityUpdateSelection.enter();
+
+  cityEnterSelection
+    .append("circle")
+    .attr("class", "city-circle")
+    .on("click", onClickCity)
+    .on("mouseover", onMouseOverCity)
+    .on("mouseout", onMouseOutOfCity)
+    .attr("r", 1.5)
+    .merge(cityUpdateSelection)
+    .attr("fill", d => colorScale(d[selectedIndex]))
+    .attr("cx", function(d){
+      let coords = projection([d.lng, d.lat]);
+      return coords[0];
+    })
+    .attr("cy", function(d){
+      let coords = projection([d.lng, d.lat]);
+      return coords[1];
+    });
+
+    cityUpdateSelection.exit()
+      .remove();
 }
 
 // HELPER FUNCTIONS

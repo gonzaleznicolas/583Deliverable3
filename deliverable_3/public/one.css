@@ -17,11 +17,11 @@ select{
 	stroke: hsla(57, 0%, 69%, 1);
 }
 
-.mouseover > .city-circle{
+.mouseover.city-circle{
 	r: 5;
 }
 
-.selected > .city-circle{
+.selected.city-circle{
 	stroke: black;
 	stroke-width: 1;
 	r: 3;
