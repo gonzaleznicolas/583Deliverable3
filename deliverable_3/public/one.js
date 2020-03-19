@@ -21,10 +21,11 @@ function initialize(error, world_topoJSON_data, cost_of_living, city_coordinates
   setupPage();
   drawMap(world_topoJSON_data);
 
-  selectedIndex = $(this).children("option:selected").val();
+  selectedIndex = $('#indexSelector').val();
 
   $('#indexSelector').on('change', function(){
     selectedIndex = $(this).children("option:selected").val();
+    refreshPlottedCities();
   });
 
   colorScale = d3.scaleLinear()
@@ -99,7 +100,7 @@ function refreshPlottedCities(){
 
   cityMarkers.append("circle")
       .attr("class", "city-circle")
-      .attr("fill", d => colorScale(d["Cost of Living Index"]))
+      .attr("fill", d => colorScale(d[selectedIndex]))
       .attr("r", 1.5)
       .attr("cx", function(d){
         let coords = projection([d.lng, d.lat]);
