@@ -1,58 +1,81 @@
+// GLOBAL DECLARATIONS
+let svg;
+let margin;
+let height;
+let width;
+let costOfLivingData;
+let projection;
+let pathGenerator;
+let selectedIndex;
+let colorScale;
 
-// PAGE SETUP
-
-let margin = {top: 50, left: 50, right: 50, bottom: 50};
-
-let height = 400 - margin.top - margin.bottom;
-let width = 800 - margin.left - margin.right;
-
-var svg = d3.select( "svg" )
-  .attr( "width", width + margin.top + margin.bottom)
-  .attr( "height", height + margin.left + margin.right)
-  .append("g")
-  .attr("transform", `translate(${margin.left},${margin.top})`);
-
-// MAP SETUP
-
-// create projection using Mercator.
-// Converts a lattitude and longitude into a screen coordinate
-// according to the specified projection type
-let projection = d3.geoMercator()
-  .translate([width/2, height/2+50])
-  .scale(110);
-
-// create a path generator to translate from topoJSON geometry to SVG paths
-let pathGenerator = d3.geoPath()
-  .projection(projection);
-
-// create color scale
-let colorScale = d3.scaleLinear()
-  .domain([0, 130])
-  .range(['white', 'darkred']);
-
-// MAIN CODE
-
-$('#indexSelector').on('change', function(){
-  let selectedIndex = $(this).children("option:selected").val();
-  console.log(selectedIndex);
-});
-
-// read in necessary data
+// read in data
 d3.queue()
   .defer(d3.json, "world.topojson")
   .defer(d3.csv, "cost_of_living.csv")
   .defer(d3.csv, "city_coordinates.csv")
-  .await(onDataLoaded);
+  .await(initialize);
 
-function onDataLoaded(error, data, cost_of_living, city_coordinates){
-  augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates);
+function initialize(error, world_topoJSON_data, cost_of_living, city_coordinates){
+  prepareData(cost_of_living, city_coordinates);
+  setupPage();
+  drawMap(world_topoJSON_data);
 
-  console.log(data);
-  console.log(cost_of_living);
-  console.log(city_coordinates);
+  selectedIndex = $(this).children("option:selected").val();
 
-  let countries = topojson.feature(data, data.objects.countries).features 
-  console.log(countries);
+  $('#indexSelector').on('change', function(){
+    selectedIndex = $(this).children("option:selected").val();
+  });
+
+  colorScale = d3.scaleLinear()
+    .domain([0, 130])
+    .range(['white', 'darkred']);
+
+  refreshPlottedCities();
+}
+
+function prepareData(cost_of_living, city_coordinates){
+  costOfLivingData = cost_of_living;
+
+  // add coordinates to cost of living data
+  costOfLivingData.forEach(function(cityCostData){
+    cityCords = city_coordinates.find(function(cityCoordinatesData){ return cityCostData.City == cityCoordinatesData.city_ascii && cityCostData.Country == cityCoordinatesData.country;});
+    if (cityCords != undefined){  // if found lat and long
+      cityCostData.lat = cityCords.lat; cityCostData.lng = cityCords.lng;
+    }
+    else {
+      console.log(cityCostData.City, cityCostData.Country);
+    }
+  });
+}
+
+function setupPage(){
+  margin = {top: 50, left: 50, right: 50, bottom: 50};
+
+  height = 400 - margin.top - margin.bottom;
+  width = 800 - margin.left - margin.right;
+  
+  svg = d3.select( "svg" )
+    .attr( "width", width + margin.top + margin.bottom)
+    .attr( "height", height + margin.left + margin.right)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+}
+
+function drawMap(world_topoJSON_data){
+
+  let countries = topojson.feature(world_topoJSON_data, world_topoJSON_data.objects.countries).features 
+
+  // create projection using Mercator.
+  // Converts a lattitude and longitude into a screen coordinate
+  // according to the specified projection type
+  projection = d3.geoMercator()
+    .translate([width/2, height/2+50])
+    .scale(110);
+
+  // create a path generator to translate from topoJSON geometry to SVG paths
+  pathGenerator = d3.geoPath()
+    .projection(projection);
 
   // draw countries
   svg.selectAll(".country")
@@ -61,10 +84,13 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
       .append("path")
       .attr("class", "country")
       .attr("d", pathGenerator);
-  
+}
+
+function refreshPlottedCities(){
+
   // draw city markers
   let cityMarkers = svg.selectAll(".city-markers")
-      .data(cost_of_living)
+      .data(costOfLivingData)
       .enter()
       .append("g")
       .attr("class", "city-markers")
@@ -102,18 +128,6 @@ function onDataLoaded(error, data, cost_of_living, city_coordinates){
 }
 
 // HELPER FUNCTIONS
-
-function augmentCostOfLivingWithCityCoordinates(cost_of_living, city_coordinates){
-  cost_of_living.forEach(function(cityCostData){
-    cityCords = city_coordinates.find(function(cityCoordinatesData){ return cityCostData.City == cityCoordinatesData.city_ascii && cityCostData.Country == cityCoordinatesData.country;});
-    if (cityCords != undefined){  // if found lat and long
-      cityCostData.lat = cityCords.lat; cityCostData.lng = cityCords.lng;
-    }
-    else {
-      console.log(cityCostData.City, cityCostData.Country);
-    }
-  });
-}
 
 function getSelectedCities(){
   return d3.selectAll(".city-markers.selected").data();
