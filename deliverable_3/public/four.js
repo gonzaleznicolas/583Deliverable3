@@ -112,11 +112,11 @@ function refreshPlottedCities(){
     .on("click", onClickCity)
     .on("mouseover", onMouseOverCity)
     .on("mouseout", onMouseOutOfCity)
+    .attr("fill", "red")
+    .merge(cityUpdateSelection)
     .attr("r", function(d){
       return radiusScale(d[selectedIndex]);
     })
-    .merge(cityUpdateSelection)
-    .attr("fill", "red")
     .attr("cx", function(d){
       let coords = projection([d.lng, d.lat]);
       return coords[0];
