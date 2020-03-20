@@ -7,18 +7,28 @@ svg{
 	border: solid 1px black;
 }
 
+.sphere {
+	fill:hsla(202, 70%, 80%, 1);
+}
+
+.land {
+	fill: hsla(74, 69%, 87%, 1);
+}
+
+.boundary {
+	fill: none;
+	stroke: hsla(57, 0%, 80%, 1);
+	stroke-linejoin: round;
+	stroke-linecap: round;
+	vector-effect: non-scaling-stroke;
+}
+
 select{
 	margin: 20px;
 }
 
-.country{
-	fill: hsla(74, 69%, 87%, 1);
-	stroke-width: 0.1;
-	stroke: hsla(57, 0%, 69%, 1);
-}
-
 .mouseover.city-circle{
-	r: 5;
+	r: 2;
 }
 
 .selected.city-circle{
