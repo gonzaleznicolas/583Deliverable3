@@ -28,7 +28,7 @@ select{
 }
 
 .mouseover.city-circle{
-	r: 5;
+	r: 2;
 }
 
 .selected.city-circle{

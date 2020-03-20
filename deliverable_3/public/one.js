@@ -95,7 +95,10 @@ function setupPageAndMap(world_topoJSON_data){
 }
 
 function zoomed() {
-  mapGroup.selectAll('path') // To prevent stroke width from scaling
+  mapGroup.selectAll('path')
+    .attr('transform', d3.event.transform);
+  
+  svg.selectAll(".city-circle")
     .attr('transform', d3.event.transform);
 }
 
