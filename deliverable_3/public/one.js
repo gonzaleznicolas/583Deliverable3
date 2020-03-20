@@ -28,11 +28,7 @@ function initialize(data){
     selectedIndex = $(this).children("option:selected").val();
     refreshPlottedCities();
   });
-
-  colorScale = d3.scaleLinear()
-    .domain([0, 130])
-    .range(['white', 'darkred']);
-
+  
   refreshPlottedCities();
 }
 
@@ -104,6 +100,8 @@ function zoomed() {
 
 function refreshPlottedCities(){
 
+  computeColorScale();
+
   let cityUpdateSelection = svg.selectAll(".city-circle").data(costOfLivingData);
 
   let cityEnterSelection = cityUpdateSelection.enter();
@@ -131,6 +129,12 @@ function refreshPlottedCities(){
 }
 
 // HELPER FUNCTIONS
+
+function computeColorScale(){
+  colorScale = d3.scaleLinear()
+    .domain([0, 130])
+    .range(['white', 'darkred']);
+}
 
 function onMouseOverCity(d){
   d3.select(this).classed("mouseover", true);

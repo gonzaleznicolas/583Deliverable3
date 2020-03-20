@@ -8,7 +8,7 @@ let costOfLivingData;
 let projection;
 let path;
 let selectedIndex;
-let colorScale;
+let radiusScale;
 
 // read in data
 Promise.all([
@@ -100,7 +100,7 @@ function zoomed() {
 
 function refreshPlottedCities(){
 
-  computeColorScale();
+  computeRadiusScale();
 
   let cityUpdateSelection = svg.selectAll(".city-circle").data(costOfLivingData);
 
@@ -112,9 +112,11 @@ function refreshPlottedCities(){
     .on("click", onClickCity)
     .on("mouseover", onMouseOverCity)
     .on("mouseout", onMouseOutOfCity)
-    .attr("r", 1.5)
+    .attr("r", function(d){
+      return radiusScale(d[selectedIndex]);
+    })
     .merge(cityUpdateSelection)
-    .attr("fill", d => colorScale(d[selectedIndex]))
+    .attr("fill", "red")
     .attr("cx", function(d){
       let coords = projection([d.lng, d.lat]);
       return coords[0];
@@ -130,10 +132,33 @@ function refreshPlottedCities(){
 
 // HELPER FUNCTIONS
 
-function computeColorScale(){
-  colorScale = d3.scaleLinear()
-    .domain([0, 50, 130])
-    .range(['red','white', 'green']);
+function computeRadiusScale(){
+  // make white the average index value for the currently selected index, rather than simply 50
+  let sum = 0;
+  let total = 0;
+  let max = 0;
+  let min = 130;
+  costOfLivingData.forEach(function(d){
+    total++;
+    sum += parseFloat(d[selectedIndex]);
+    if (parseFloat(d[selectedIndex]) > max){
+      max = parseFloat(d[selectedIndex]);
+    }
+    if (parseFloat(d[selectedIndex]) < min){
+      min = parseFloat(d[selectedIndex]);
+    }
+  });
+  let avg = sum/total;
+
+  console.log("sum: ", sum);
+  console.log("total: ", total);
+  console.log("min: ", min);
+  console.log("average: ", avg);
+  console.log("max: ", max);
+
+  radiusScale = d3.scaleLinear()
+    .domain([min, max])
+    .range([0.5, 4]);
 }
 
 function onMouseOverCity(d){
