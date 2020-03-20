@@ -28,6 +28,8 @@ select{
 }
 
 .mouseover.city-circle{
+	stroke: grey;
+	stroke-width: 0.5;
 	r: 2;
 }
 
