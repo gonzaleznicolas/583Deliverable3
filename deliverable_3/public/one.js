@@ -142,11 +142,8 @@ function makeColorLegend(){
   // https://bl.ocks.org/Ro4052/caaf60c1e9afcd8ece95034ea91e1eaa
   $("#legend").empty();
   const container = d3.select("#legend");
-    const colourScale = d3
-    	.scaleSequential(d3.interpolateViridis)
-    	.domain([0, 22]);
-    const domain = colourScale.domain();
-    
+
+    const domain = colorScale.domain();
     const width = 50;
     const height = 150;
     
@@ -174,7 +171,7 @@ function makeColorLegend(){
       .baseValue((_, i) => (i > 0 ? expandedDomain[i - 1] : 0))
       .mainValue(d => d)
       .decorate(selection => {
-        selection.selectAll("path").style("fill", d => colourScale(d));
+        selection.selectAll("path").style("fill", d => colorScale(d));
       });
     
     const axisLabel = fc
