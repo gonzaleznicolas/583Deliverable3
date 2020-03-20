@@ -30,9 +30,9 @@ function initialize(data){
   });
 
   colorScale = d3.scaleLinear()
-    .domain([0, 130])
-    .range(['white', 'darkred']);
-
+    .domain([0, 50, 130])
+    .range(['red','white', 'green']);
+  
   refreshPlottedCities();
 }
 

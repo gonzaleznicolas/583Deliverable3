@@ -7,6 +7,15 @@ app.use(express.static('public'));
 app.get('/one', function (req, res) {
 	res.sendFile(__dirname + '/one.html');
 });
+
+app.get('/two', function (req, res) {
+	res.sendFile(__dirname + '/two.html');
+});
+
+app.get('/three', function (req, res) {
+	res.sendFile(__dirname + '/three.html');
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });

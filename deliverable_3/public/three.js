@@ -28,11 +28,7 @@ function initialize(data){
     selectedIndex = $(this).children("option:selected").val();
     refreshPlottedCities();
   });
-
-  colorScale = d3.scaleLinear()
-    .domain([0, 130])
-    .range(['white', 'darkred']);
-
+  
   refreshPlottedCities();
 }
 
@@ -104,6 +100,8 @@ function zoomed() {
 
 function refreshPlottedCities(){
 
+  computeColorScale();
+
   let cityUpdateSelection = svg.selectAll(".city-circle").data(costOfLivingData);
 
   let cityEnterSelection = cityUpdateSelection.enter();
@@ -131,6 +129,35 @@ function refreshPlottedCities(){
 }
 
 // HELPER FUNCTIONS
+
+function computeColorScale(){
+  // make white the average index value for the currently selected index, rather than simply 50
+  let sum = 0;
+  let total = 0;
+  let max = 0;
+  let min = 130;
+  costOfLivingData.forEach(function(d){
+    total++;
+    sum += parseFloat(d[selectedIndex]);
+    if (parseFloat(d[selectedIndex]) > max){
+      max = parseFloat(d[selectedIndex]);
+    }
+    if (parseFloat(d[selectedIndex]) < min){
+      min = parseFloat(d[selectedIndex]);
+    }
+  });
+  let avg = sum/total;
+
+  console.log("sum: ", sum);
+  console.log("total: ", total);
+  console.log("min: ", min);
+  console.log("average: ", avg);
+  console.log("max: ", max);
+
+  colorScale = d3.scaleLinear()
+    .domain([min, avg, max])
+    .range(['red','white', 'green']);
+}
 
 function onMouseOverCity(d){
   d3.select(this).classed("mouseover", true);
