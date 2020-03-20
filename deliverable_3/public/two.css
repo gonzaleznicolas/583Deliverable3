@@ -2,7 +2,7 @@
 	font-family: Arial;
 }
 
-svg{
+#map{
 	background: hsla(202, 70%, 80%, 1);
 	border: solid 1px black;
 }
