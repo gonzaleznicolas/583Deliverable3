@@ -134,7 +134,7 @@ function refreshPlottedCities(){
 function computeColorScale(){
   colorScale = d3.scaleLinear()
     .domain([0, 50, 130])
-    .range(['red','white', 'green']);
+    .range(['#762a83','white', '#1b7837']);
 }
 
 function makeColorLegend(){
