@@ -35,5 +35,6 @@ select{
 
 .selected.city-circle{
 	stroke: black;
+	fill: green;
 	stroke-width: 1;
 }
